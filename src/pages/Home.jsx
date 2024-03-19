@@ -1,41 +1,35 @@
-import React, { useContext } from 'react';
-import { UsersContext } from "../context/users";
-import { useState } from 'react';
-import { Component } from 'react';
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from "react-redux";
+import { getUsers, updateUsers } from "../redux/slices/users";
 
 const Home = () => {
-  const { addUser, removeUsers } = useContext(UsersContext);
-  const [name, setName] = useState("")
+  const dispatch = useDispatch();
+  const { users, isRequesting } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    dispatch(getUsers({ limit: 10 }))
+  }, [])
 
   return (
     <div>
       <div>Users</div>
-      <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <div><button onClick={() => addUser({
-        name,
-        id: Date.now()
-      })}>Add User</button></div>
-      <div><button onClick={() => removeUsers()}>Remove Users</button></div>
-
-      <UsersList />
-    </div>
-  )
-}
-
-export class UsersList extends Component {
-  static contextType = UsersContext; // variable name must contextType
-  render() {
-    const { users } = this.context;
-    return (
       <ul>
         {
-          users.map((user, index) => (
-            <li key={index}>{user.name}</li>
+          (!isRequesting && users.length > 0) && users.map((user) => (
+            <li key={user.id} >{user.name}</li>
           ))
         }
       </ul>
-    )
-  }
+      {!isRequesting && users.length === 0 && <div>Data not found</div>}
+      {isRequesting && <div>Loading...</div>}
+      <div>
+        <button onClick={() => dispatch(getUsers())} >Fetch Users</button>
+      </div>
+      {users.length > 0 && <div>
+        <button onClick={() => dispatch(updateUsers([]))} >Remove All</button>
+      </div>}
+    </div>
+  )
 }
 
 export default Home
