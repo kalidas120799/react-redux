@@ -1,8 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
-import users from "./slices/users";
+import { createStore, applyMiddleware, compose } from "redux";
+import { thunk } from "redux-thunk";
+import rootReducer from "./reducers";
 
-const store = configureStore({
-    reducer: { users }
-});
+let middleware = applyMiddleware(thunk);
 
-export default store;
+if (process.env.NODE_ENV !== "production" && window.__REDUX_DEVTOOLS_EXTENSION__) {
+    const devtools = window.__REDUX_DEVTOOLS_EXTENSION__();
+    middleware = compose(
+        middleware,
+        devtools
+    );
+}
+
+export default createStore(rootReducer, middleware);

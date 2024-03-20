@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
-import { getUsers, updateUsers } from "../redux/slices/users";
+import { getUsers, updateUsers } from "../redux/actions/users";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { users, isRequesting } = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(getUsers({ limit: 10 }))
+    dispatch(getUsers({}))
   }, [])
 
   return (
@@ -23,7 +23,7 @@ const Home = () => {
       {!isRequesting && users.length === 0 && <div>Data not found</div>}
       {isRequesting && <div>Loading...</div>}
       <div>
-        <button onClick={() => dispatch(getUsers())} >Fetch Users</button>
+        <button onClick={() => dispatch(getUsers({}))} >Fetch Users</button>
       </div>
       {users.length > 0 && <div>
         <button onClick={() => dispatch(updateUsers([]))} >Remove All</button>
