@@ -1,4 +1,0 @@
-export const ADD_USERS = 'ADD_USERS';
-export const ADD_USERS_REQUESTING = 'ADD_USERS_REQUESTING';
-
-export const UPDATE_USERS = 'UPDATE_USERS';
